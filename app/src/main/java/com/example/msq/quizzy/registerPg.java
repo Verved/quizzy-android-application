@@ -1,66 +1,46 @@
 package com.example.msq.quizzy;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.Task;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
@@ -75,21 +55,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static android.text.TextUtils.isEmpty;
-import static com.facebook.appevents.UserDataStore.EMAIL;
 
 
 public class registerPg extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
 
     private TextView regPgQuizzy, loginWith, loginQuizzy;
-    private EditText QuizzerName, EmailR, PasswordR, EmailL, PasswordL;
+    private EditText QuizzerNameR, EmailR, PasswordR, PasswordL, QuizzerNameL;
     private Button createAccountButton, gotoLoginPg, loginButton, faceboook, googleBtn, createAcc, twitter;
     private CallbackManager callbackManager;
     private LoginButton fb_login_btn;
@@ -113,7 +90,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
 
         regPgQuizzy = findViewById(R.id.regPgQuizzy);
 
-        QuizzerName = findViewById(R.id.quizzerName);
+        QuizzerNameR = findViewById(R.id.quizzerName);
         EmailR = findViewById(R.id.email);
         PasswordR = findViewById(R.id.password);
         createAccountButton = findViewById(R.id.createAcc);
@@ -129,7 +106,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
         View login_popup = getLayoutInflater().inflate(R.layout.login_alert_dialog, null);
 
         loginButton = login_popup.findViewById(R.id.loginButton);
-        EmailL = login_popup.findViewById(R.id.LoginEmail);
+        QuizzerNameL = findViewById(R.id.QuizzerNameL);
         PasswordL = login_popup.findViewById(R.id.LoginPassword);
 
 
@@ -139,7 +116,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
         Typeface noteworthy = Typeface.createFromAsset(getAssets(), "fonts/noteworthy.ttf");
 
         regPgQuizzy.setTypeface(optima);
-        QuizzerName.setTypeface(proxima);
+        QuizzerNameR.setTypeface(proxima);
         EmailR.setTypeface(proxima);
         PasswordR.setTypeface(proxima);
         createAccountButton.setTypeface(copperplate);
@@ -267,7 +244,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(registerPg.this, R.style.MyCustomTheme);
         View mView = getLayoutInflater().inflate(R.layout.login_alert_dialog, null);
 
-        EmailL = mView.findViewById(R.id.LoginEmail);
+        QuizzerNameL = mView.findViewById(R.id.QuizzerNameL);
         PasswordL = mView.findViewById(R.id.LoginPassword);
         loginButton = mView.findViewById(R.id.loginButton);
         loginQuizzy = mView.findViewById(R.id.loginQuizzy);
@@ -277,7 +254,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
         Typeface copperplate = Typeface.createFromAsset(getAssets(), "fonts/copperplate.ttf");
 
         loginQuizzy.setTypeface(optima);
-        EmailL.setTypeface(proxima);
+        QuizzerNameL.setTypeface(proxima);
         PasswordL.setTypeface(proxima);
         loginButton.setTypeface(copperplate);
 
@@ -333,15 +310,11 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
         //Toast.makeText(this, "login button clicked !", Toast.LENGTH_SHORT).show();
 
         final String password = PasswordL.getText().toString().trim();
-        final String username = QuizzerName.getText().toString().trim();
+        final String username = QuizzerNameL.getText().toString().trim();
 
         if(password.isEmpty() || username.isEmpty()){
             Toast.makeText(this, "Please enter all the credentials !", Toast.LENGTH_SHORT).show();
             return;
-        }
-
-        else if(!isValidEmail(username)){
-            Toast.makeText(this, "Enter a valid email !", Toast.LENGTH_SHORT).show();
         }
 
         else{
@@ -352,7 +325,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
             String url = "http://quizzy-api.herokuapp.com/login";
 
             final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
-            progressDialog.setMessage("Please Wait...");
+            progressDialog.setMessage("Signing in...");
             progressDialog.show();
 
             StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -364,6 +337,10 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
                             Log.d("Response recieved", response);
                             Toast.makeText(registerPg.this, "Login Successful !", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
+
+                            Intent intent = new Intent(registerPg.this, homePg.class);
+                            startActivity(intent);
+                            finish();
                         }
                     },
                     new Response.ErrorListener()
@@ -395,7 +372,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
     private void registerUserAPI() {
 
 
-        final String username = QuizzerName.getText().toString().trim();
+        final String username = QuizzerNameR.getText().toString().trim();
         final String email = EmailR.getText().toString().trim();
         final String password = PasswordR.getText().toString().trim();
 
@@ -413,7 +390,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
             String url = "http://quizzy-api.herokuapp.com/signup";
 
             final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppCompatAlertDialogStyle);
-            progressDialog.setMessage("Registering User...");
+            progressDialog.setMessage("Registering...");
             progressDialog.show();
 
             StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -425,6 +402,10 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
                             Toast.makeText(registerPg.this, "Registration Successful !", Toast.LENGTH_SHORT).show();
                             Log.d("Response recieved", response);
                             progressDialog.dismiss();
+
+                            Intent intent = new Intent(registerPg.this, homePg.class);
+                            startActivity(intent);
+                            finish();
                         }
                     },
                     new Response.ErrorListener()
