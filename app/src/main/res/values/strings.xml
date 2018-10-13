@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">QUIZZY</string>
+    <string name="cpp">C++</string>
+    <string name="swift">Swift</string>
+    <string name="c">C</string>
+    <string name="java">Java</string>
+    <string name="python">Python</string>
+    <string name="javascript">JavaScript</string>
+    <string name="php">PHP</string>
+    <string name="ruby">Ruby</string>
+    <string name="swifticon">swiftIcon</string>
+    <string name="cppicon">cppIcon</string>
+    <string name="cLangicon">cLangIcon</string>
+    <string name="javaicon">javaIcon</string>
+    <string name="pyhtonicon">pythonIcon</string>
+    <string name="javascripticon">javascriptIcon</string>
+    <string name="phpicon">phpIcon</string>
+    <string name="rubyicon">rubyIcon</string>
+    <string name="quizzy">QUIZZY</string>
+    <string name="dbticon">dbtIcon</string>
+    <string name="bookmarkicon">bookmarkIcon</string>
+    <string name="shareicon">shareIcon</string>
+    <string name="bottomiconbar">bottomIconBar</string>
+    <string name="quizzyLaunch">QUIZZY</string>
+    <string name="xyz_apps_pvt_ltd">XYZ Apps Pvt. Ltd.</string>
+    <string name="quizzer_s_name">Quizzer\'s Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="create_my_account">CREATE MY ACCOUNT</string>
+    <string name="or_login_with">or login with</string>
+    <string name="login">LOGIN</string>
+    <string name="i_already_have_an_account">I ALREADY HAVE AN ACCOUNT</string>
+    <string name="take_me_straight_to_the_quiz">Take me straight to the quiz</string>
+    <string name="facebook_app_id">2190292574522905</string>
+    <string name="fb_login_protocol_scheme">fb2190292574522905</string>
+    <string name="username">Username</string>
+
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">OEcKLByFNKccEjfB6cxAZv81f</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">UcDZBMJPHECCNss1y1LPIzi4JTaK4iJB2vraOOsgKCPe305JLi</string>
+
+</resources>
