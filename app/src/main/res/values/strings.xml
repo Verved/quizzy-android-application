@@ -37,5 +37,11 @@
 
     <string name="com.twitter.sdk.android.CONSUMER_KEY">OEcKLByFNKccEjfB6cxAZv81f</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">UcDZBMJPHECCNss1y1LPIzi4JTaK4iJB2vraOOsgKCPe305JLi</string>
+    <string name="hi_user">Hi, User !</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="are_you_sure_you_want_to_log_out">Are you sure you want to log out?</string>
+    <string name="logout">logout</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 
 </resources>

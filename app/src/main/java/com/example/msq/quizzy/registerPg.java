@@ -2,6 +2,8 @@ package com.example.msq.quizzy;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -32,6 +34,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -64,7 +67,6 @@ import static android.text.TextUtils.isEmpty;
 
 public class registerPg extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
-
     private TextView regPgQuizzy, loginWith, loginQuizzy;
     private EditText QuizzerNameR, EmailR, PasswordR, PasswordL, QuizzerNameL;
     private Button createAccountButton, gotoLoginPg, loginButton, faceboook, googleBtn, createAcc, twitter;
@@ -74,6 +76,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
     private RequestQueue queue;
     private GoogleApiClient googleApiClient;
     public static final int REQ_CODE = 9001;
+
 
     public boolean isValidEmail(CharSequence target) {
         return (!isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
@@ -85,6 +88,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
         Twitter.initialize(this);
         setContentView(R.layout.activity_register_pg);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         AppEventsLogger.activateApp(this);
 
@@ -96,7 +100,6 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
         createAccountButton = findViewById(R.id.createAcc);
         loginWith = findViewById(R.id.orLoginWith);
         gotoLoginPg = findViewById(R.id.gotoLoginPg);
-        //loginPopup = findViewById(R.id.loginPopup);
         faceboook = findViewById(R.id.facebook);
         fb_login_btn = findViewById(R.id.fb_login_button);
         googleBtn = findViewById(R.id.gmail);
@@ -136,12 +139,26 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                String userId = loginResult.getAccessToken().getUserId();
-
                 GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
+
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+
                         displayUserInfo(object);
+
+                        String name = null;
+
+                        try {
+                            name = response.getJSONObject().getString("first_name") + " " + response.getJSONObject().getString("last_name");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        editor.putString("username", name);
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.apply();
                     }
                 });
 
@@ -150,6 +167,10 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
 
                 graphRequest.setParameters(parameters);
                 graphRequest.executeAsync();
+
+                Intent intent = new Intent(registerPg.this, homePg.class);
+                startActivity(intent);
+                finish();
 
             }
 
@@ -178,12 +199,20 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
             @Override
             public void success(Result<TwitterSession> result) {
                 // Do something with result, which provides a TwitterSession for making API calls
+
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+
                 final TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
                 TwitterAuthToken authToken = session.getAuthToken();
                 String token = authToken.token;
                 String secret = authToken.secret;
 
                 final String username = session.getUserName();
+
+                editor.putString("username", username);
+                editor.putBoolean("isLoggedIn", true);
+                editor.apply();
 
                 TwitterAuthClient authClient = new TwitterAuthClient();
                 authClient.requestEmail(session, new Callback<String>() {
@@ -192,6 +221,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
                         // Do something with the result, which provides the email address
                         Log.i("username", username);
                         Log.i("Result", String.valueOf(result));
+
                     }
 
                     @Override
@@ -200,6 +230,10 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
                         Log.i("Twitter Error", exception.getMessage());
                     }
                 });
+
+                Intent intent = new Intent(registerPg.this, homePg.class);
+                startActivity(intent);
+                finish();
 
             }
 
@@ -236,6 +270,8 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
         //loginButton and login implemented in animate function
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
     }
 
@@ -307,6 +343,9 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
 
     private void loginAPI() {
 
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = pref.edit();
+
         //Toast.makeText(this, "login button clicked !", Toast.LENGTH_SHORT).show();
 
         final String password = PasswordL.getText().toString().trim();
@@ -338,9 +377,15 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
                             Toast.makeText(registerPg.this, "Login Successful !", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
 
+                            editor.putBoolean("isLoggedIn", true);
+                            editor.putString("username", QuizzerNameL.getText().toString());
+                            editor.apply();
+
                             Intent intent = new Intent(registerPg.this, homePg.class);
                             startActivity(intent);
                             finish();
+
+
                         }
                     },
                     new Response.ErrorListener()
@@ -371,6 +416,8 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
 
     private void registerUserAPI() {
 
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = pref.edit();
 
         final String username = QuizzerNameR.getText().toString().trim();
         final String email = EmailR.getText().toString().trim();
@@ -402,6 +449,10 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
                             Toast.makeText(registerPg.this, "Registration Successful !", Toast.LENGTH_SHORT).show();
                             Log.d("Response recieved", response);
                             progressDialog.dismiss();
+
+                            editor.putBoolean("isLoggedIn", true);
+                            editor.putString("username", QuizzerNameL.getText().toString());
+                            editor.apply();
 
                             Intent intent = new Intent(registerPg.this, homePg.class);
                             startActivity(intent);
@@ -437,6 +488,10 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
     }
 
     public void displayUserInfo(JSONObject object){
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
         String first_name, last_name, email, id;
         first_name = "";
         last_name = "";
@@ -447,15 +502,21 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
             last_name = object.getString("last_name");
             email = object.getString("email");
             id = object.getString("id");
+
         } catch (JSONException e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
+        /*String name = first_name + " " + last_name;
+        editor.putString("username", name);
+        editor.putBoolean("isLoggedIn", true);
+        editor.apply();*/
+
         //profile pic
         //Bitmap bitmap = getFacebookProfilePicture(id);
 
-        Log.i("name ", first_name + " " + last_name);
+        Log.i("Name ", first_name + " " + last_name);
         Log.i("Email ", email);
         Log.i("ID ", id);
 
@@ -512,6 +573,17 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
             Log.i("name:- ", name);
             Log.i("Email:- ", email);
             Log.i("Img URL:- ", imgURL);
+
+            SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+
+            editor.putString("username", name);
+            editor.putBoolean("isLoggedIn", true);
+            editor.apply();
+
+            Intent intent = new Intent(registerPg.this, homePg.class);
+            startActivity(intent);
+            finish();
 
         }
 
