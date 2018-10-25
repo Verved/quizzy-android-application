@@ -2,7 +2,6 @@
     <string name="app_name">QUIZZY</string>
     <string name="cpp">C++</string>
     <string name="swift">Swift</string>
-    <string name="c">C</string>
     <string name="java">Java</string>
     <string name="python">Python</string>
     <string name="javascript">JavaScript</string>
@@ -43,5 +42,9 @@
     <string name="logout">logout</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
 
 </resources>

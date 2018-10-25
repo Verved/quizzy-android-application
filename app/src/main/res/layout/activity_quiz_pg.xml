@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/quiz_pg_bg"
+    tools:context=".quizPg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:id="@+id/quizPgTopBar"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:alpha="1"
+            android:background="#fff">
+
+            <Button
+                android:id="@+id/dashboard"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="20dp"
+                android:background="#fff"
+                android:gravity="center_vertical"
+                android:text="@string/dashboard"
+                style="?android:attr/borderlessButtonStyle"
+                android:textColor="#000"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/language"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/questionNo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignEnd="@+id/language"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:textColor="#000" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/prev_question"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/question_right"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/question_left"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/next_question"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="17sp" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_below="@+id/question_left"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:background="#000" />
+
+            <LinearLayout
+                android:id="@+id/btnLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/option1"
+                    android:layout_width="300dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/option_A"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:gravity="center"
+                        android:text="@string/a"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/abcd_btn"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:textSize="20sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/optionA"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/options_btn"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/answer_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/options_btn"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/option2"
+                    android:layout_width="300dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/option_B"
+                        android:layout_width="35dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abcd_btn"
+                        android:gravity="center"
+                        android:text="@string/b"
+                        android:textColor="#fff"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:textSize="20sp" />
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/optionB"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/options_btn"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/answer_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/options_btn"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="15sp" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/option3"
+                    android:layout_width="300dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/option_C"
+                        android:layout_width="35dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abcd_btn"
+                        android:gravity="center"
+                        android:text="@string/c"
+                        android:textColor="#fff"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:textSize="20sp" />
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/optionC"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/options_btn"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/answer_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/options_btn"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="15sp" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/option4"
+                    android:layout_width="300dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="35dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/option_D"
+                        android:layout_width="35dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abcd_btn"
+                        android:gravity="center"
+                        android:text="@string/d"
+                        android:textColor="#fff"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:textSize="20sp" />
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/optionD"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/options_btn"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/answer_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/options_btn"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="15sp" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
