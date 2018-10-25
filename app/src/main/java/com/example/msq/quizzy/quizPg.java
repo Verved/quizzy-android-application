@@ -243,8 +243,8 @@ public class quizPg extends AppCompatActivity  implements GestureDetector.OnGest
         if(index >= 1) {
             questionNo.setText(new StringBuilder().append(String.valueOf(index)).append("/").append(String.valueOf(jsonObj.size())).toString());
 
-            prevQuestion.startAnimation(quesAnimIn);
-            questionR.startAnimation(quesFadeIn);
+            questionR.startAnimation(quesAnimIn);
+            prevQuestion.startAnimation(quesFadeIn);
 
             prevQuestion.setText(jsonObj.get(index - 1).getQuestion());
             questionR.setText(jsonObj.get(index - 1).getQuestion());
