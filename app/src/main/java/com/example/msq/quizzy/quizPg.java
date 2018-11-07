@@ -15,9 +15,13 @@ import android.widget.TextView;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 
-public class quizPg extends AppCompatActivity  implements GestureDetector.OnGestureListener, View.OnClickListener, Animation.AnimationListener {
+    public class quizPg extends AppCompatActivity  implements GestureDetector.OnGestureListener, View.OnClickListener, Animation.AnimationListener {
 
     private LinearLayout options[] = new LinearLayout[4];
     private TextView questionL, questionNo, lang, prevQuestion, nextQuestion, questionR;
@@ -26,8 +30,9 @@ public class quizPg extends AppCompatActivity  implements GestureDetector.OnGest
     private TextView answers[] = new TextView[4];
     private Button dashboard;
     private GestureDetector gestureDetector;
-    private int index;
+    private static int index;
     private ArrayList<JsonObj> jsonObj;
+    private AdView mAdView;
 
     Animation animFadeIn, quesAnimIn, quesAnimOut, quesFadeIn, quesFadeOut;
 
@@ -35,6 +40,13 @@ public class quizPg extends AppCompatActivity  implements GestureDetector.OnGest
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_pg);
+
+        //app id for admob = ca-app-pub-2174142312533088~2596900768
+        //ad unit id = ca-app-pub-2174142312533088/7653786328
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         index = 1;
 
@@ -229,7 +241,6 @@ public class quizPg extends AppCompatActivity  implements GestureDetector.OnGest
             option_[i].setBackgroundResource(R.drawable.abcd_btn);
         }
 
-
         index--;
         if(index < 1){
             index = 1;
@@ -247,7 +258,7 @@ public class quizPg extends AppCompatActivity  implements GestureDetector.OnGest
             prevQuestion.startAnimation(quesFadeIn);
 
             prevQuestion.setText(jsonObj.get(index - 1).getQuestion());
-            questionR.setText(jsonObj.get(index - 1).getQuestion());
+            //questionR.setText(jsonObj.get(index - 1).getQuestion());
 
             String opt[] = jsonObj.get(index - 1).getOptions();
             String str;
@@ -290,7 +301,7 @@ public class quizPg extends AppCompatActivity  implements GestureDetector.OnGest
             nextQuestion.startAnimation(quesFadeIn);
 
             nextQuestion.setText(jsonObj.get(index - 1).getQuestion());
-            questionL.setText(jsonObj.get(index - 1).getQuestion());
+            //questionL.setText(jsonObj.get(index - 1).getQuestion());
 
             String opt[] = jsonObj.get(index - 1).getOptions();
             String str;
@@ -326,6 +337,11 @@ public class quizPg extends AppCompatActivity  implements GestureDetector.OnGest
         } else {
             option[choosenOptNo-1].setBackgroundResource(R.drawable.options_btn_green);
             option_[choosenOptNo-1].setBackgroundResource(R.drawable.abcd_btn_green);
+
+            for(int i=0;i<4;i++){
+                option[i].setEnabled(false);
+                option_[i].setEnabled(false);
+            }
         }
 
     }
@@ -340,10 +356,14 @@ public class quizPg extends AppCompatActivity  implements GestureDetector.OnGest
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        if(animation == quesAnimOut)
+        if(animation == quesAnimOut) {
+            questionL.setText(jsonObj.get(index - 1).getQuestion());
             questionL.setAlpha(0);
-        if(animation == quesAnimIn)
+        }
+        if(animation == quesAnimIn) {
             questionR.setAlpha(0);
+            questionR.setText(jsonObj.get(index - 1).getQuestion());
+        }
     }
 
     @Override

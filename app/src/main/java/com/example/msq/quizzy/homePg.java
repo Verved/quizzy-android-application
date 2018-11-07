@@ -328,9 +328,6 @@ public class homePg extends AppCompatActivity implements View.OnClickListener {
         progressDialog.setMessage("Signing off...");
         progressDialog.show();
 
-        //Facebook Logout
-        LoginManager.getInstance().logOut();
-
         //Google Logout
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -361,6 +358,9 @@ public class homePg extends AppCompatActivity implements View.OnClickListener {
             startActivity(intent);
             finish();
         }
+
+        //Facebook Logout
+        LoginManager.getInstance().logOut();
 
         progressDialog.dismiss();
 
