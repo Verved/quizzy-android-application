@@ -53,6 +53,7 @@ public class bookmarkPg extends AppCompatActivity implements GestureDetector.OnG
         //app id for admob = ca-app-pub-2174142312533088~2596900768
         //ad unit id = ca-app-pub-2174142312533088/7653786328
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        //MobileAds.initialize(this, "ca-app-pub-2174142312533088~2596900768");
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
