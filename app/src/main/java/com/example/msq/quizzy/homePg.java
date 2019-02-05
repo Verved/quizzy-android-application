@@ -41,13 +41,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 public class homePg extends AppCompatActivity implements View.OnClickListener {
 
     private TextView swiftText, cppText, cLangText, javaText, pythonText, javascriptText, phpText, rubyText, toolbartitle, welcomeNote, confirmationText;
-    private Button signOut, yesSignOut, noSignOut, swift, cpp, cLang, java, ruby, python, javascript, php;
+    private Button signOut, yesSignOut, noSignOut, swift, cpp, cLang, java, ruby, python, javascript, php, bookmarkPg;
+    private Set<String> bookmarkIDs = new HashSet<>();
+
 
     private RequestQueue requestQueue;
     private GoogleApiClient mGoogleApiClient;
@@ -82,6 +86,9 @@ public class homePg extends AppCompatActivity implements View.OnClickListener {
         signOut = findViewById(R.id.signOutBtn);
         welcomeNote = findViewById(R.id.welcomeNote);
         toolbartitle = findViewById(R.id.toolbar_title);
+
+        bookmarkPg = findViewById(R.id.bookmarkPg);
+        bookmarkPg.setOnClickListener(this);
 
         String username = pref.getString("username", null);
 
@@ -177,8 +184,91 @@ public class homePg extends AppCompatActivity implements View.OnClickListener {
             case R.id.jsIcon:
                 questions("Javascript");
                 break;
+            case R.id.bookmarkPg:
+                goToBookmarks();
+                break;
 
         }
+
+    }
+
+    private void goToBookmarks() {
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+        final Intent intent = new Intent(homePg.this, bookmarkPg.class);
+        final ArrayList<JsonObj> jsonObjBookmark = new ArrayList<>();
+
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+        final String url = "http://quizzy-api.herokuapp.com/api/quizzyqa";
+
+        //prepare the request
+        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        // display response
+                        Log.i("Initial API Response", response.toString());
+                        // Process the JSON
+                        try{
+                            // Loop through the array elements
+                            for(int i=0;i<response.length();i++){
+                                // Get current json object
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                Log.i("Question " + String.valueOf(i+1), jsonObject.toString());
+
+                                JSONArray JsonOptions = jsonObject.getJSONArray("options");
+                                String options[] = new String[JsonOptions.length()];
+
+                                for(int j=0;j<JsonOptions.length();j++)
+                                    options[j] = JsonOptions.getString(j);
+
+                                // Get the current jsonObject data
+                                JsonObj obj = new JsonObj();
+                                obj.setAnswer(jsonObject.getString("answer"));
+                                obj.setOptions(options);
+                                obj.setQID(jsonObject.getString("_id"));
+                                obj.setqNo(jsonObject.getString("qno"));
+                                obj.setQuestion(jsonObject.getString("question"));
+                                jsonObjBookmark.add(obj);
+
+                            }
+                            JsonObj test = jsonObjBookmark.get(1);
+                            Log.i("QID: ", test.getQID());
+
+                            Log.i("Total Questions: ", String.valueOf(jsonObjBookmark.size()));
+
+                            progressDialog.dismiss();
+                            intent.putParcelableArrayListExtra("jsonObjBookmark", jsonObjBookmark);
+                            intent.putExtra("language", jsonObjBookmark);
+                            if(bookmarkIDs == null) Toast.makeText(homePg.this, "No Questions Bookmarked !", Toast.LENGTH_SHORT).show();
+                            else startActivity(intent);
+
+
+                        }
+                        catch (JSONException e){
+                            progressDialog.dismiss();
+                            e.printStackTrace();
+                            Toast.makeText(homePg.this, "Unable to load !", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //
+                        progressDialog.dismiss();
+                        Log.d("Error.Response", error.toString());
+                        Toast.makeText(homePg.this, "Unable to load !", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+        // add it to the RequestQueue
+        requestQueue.add(jsonArrayRequest);
 
     }
 

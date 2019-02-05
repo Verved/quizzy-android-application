@@ -1,15 +1,16 @@
 package com.example.msq.quizzy;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.animation.Animation;
@@ -20,19 +21,26 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-    public class quizPg extends AppCompatActivity  implements GestureDetector.OnGestureListener, View.OnClickListener, Animation.AnimationListener {
+public class quizPg extends AppCompatActivity  implements GestureDetector.OnGestureListener, View.OnClickListener, Animation.AnimationListener {
 
     private LinearLayout options[] = new LinearLayout[4];
     private TextView questionL, questionNo, lang, prevQuestion, nextQuestion, questionR;
     private Button option_[] = new Button[4];
     private Button option[] = new Button[4];
     private TextView answers[] = new TextView[4];
-    private Button dashboard;
+    private Button dashboard, bookmark;
     private GestureDetector gestureDetector;
     private static int index;
     private ArrayList<JsonObj> jsonObj;
     private AdView mAdView;
+    private ImageView hintBulb;
+    private Set<String> bookmarkIDs = new HashSet<>();
+    private Set<String> temp = new HashSet<>();
 
     Animation animFadeIn, quesAnimIn, quesAnimOut, quesFadeIn, quesFadeOut;
 
@@ -47,6 +55,10 @@ import java.util.ArrayList;
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        temp.add("abcd");
+        SharedPreferences pref1 = getApplicationContext().getSharedPreferences("bookmark_sp", MODE_PRIVATE);
+        bookmarkIDs = pref1.getStringSet("bookmark_id", temp);
 
         index = 1;
 
@@ -88,6 +100,11 @@ import java.util.ArrayList;
         lang = findViewById(R.id.language);
 
         dashboard = findViewById(R.id.dashboard);
+        bookmark = findViewById(R.id.bookmark);
+
+        hintBulb = findViewById(R.id.hintBulb);
+
+        bookmark.setOnClickListener(this);
 
         Typeface typefaceProxima = Typeface.createFromAsset(getAssets(), "fonts/proxima.ttf");
         questionL.setTypeface(typefaceProxima);
@@ -100,6 +117,17 @@ import java.util.ArrayList;
         lang.setTypeface(typefaceProxima);
 
         jsonObj = getIntent().getParcelableArrayListExtra("jsonObj");
+
+        String Q_id = jsonObj.get(index-1).getQID();
+        Iterator<String> iter = bookmarkIDs.iterator();
+        while (iter.hasNext()) {
+            String s = iter.next();
+
+            if (s.equals(Q_id))
+                bookmark.setBackgroundResource(R.drawable.star_two);
+            else
+                bookmark.setBackgroundResource(R.drawable.star);
+        }
 
         Log.i("In quizePg Total Q's: ", String.valueOf(jsonObj.size()));
 
@@ -176,6 +204,9 @@ import java.util.ArrayList;
                 swipeRight();
                 return true;
             }
+            else if(e1.getY() - e2.getY() > 100 && Math.abs(velocityY) > 100){
+                swipeUp();
+            }
         } catch (Exception e) {
             // nothing
         }
@@ -225,15 +256,42 @@ import java.util.ArrayList;
             case R.id.optionD:
                 updateButton(optNo, 4);
                 break;
+            case R.id.bookmark:
+                bookmarkQues();
         }
+    }
+
+    private void bookmarkQues() {
+        bookmark.setBackgroundResource(R.drawable.star_two);
+        String ID = jsonObj.get(index - 1).getQID();
+        bookmarkIDs.add(ID);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("bookmark_sp", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putStringSet("bookmark_id", bookmarkIDs);
+        editor.apply();
     }
 
     private void swipeRight() {
 
+        hintBulb.setBackgroundResource(R.drawable.bulb_off);
+
+        String Q_id = jsonObj.get(index-1).getQID();
+        Iterator<String> iter = bookmarkIDs.iterator();
+        while (iter.hasNext()) {
+            String s = iter.next();
+
+            if (s.equals(Q_id))
+                bookmark.setBackgroundResource(R.drawable.star_two);
+            else
+                bookmark.setBackgroundResource(R.drawable.star);
+
+        }
+
         nextQuestion.setAlpha(0);
         prevQuestion.setAlpha(1);
 
-        for(int i=0;i<4;i++){
+        for (int i = 0; i < 4; i++) {
             option[i].setEnabled(true);
             option_[i].setEnabled(true);
 
@@ -242,16 +300,16 @@ import java.util.ArrayList;
         }
 
         index--;
-        if(index < 1){
+        if (index < 1) {
             index = 1;
             return;
         }
 
-        if(index > jsonObj.size())
+        if (index > jsonObj.size())
             index = jsonObj.size();
 
 
-        if(index >= 1) {
+        if (index >= 1) {
             questionNo.setText(new StringBuilder().append(String.valueOf(index)).append("/").append(String.valueOf(jsonObj.size())).toString());
 
             questionR.startAnimation(quesAnimIn);
@@ -273,6 +331,20 @@ import java.util.ArrayList;
     }
 
     private void swipeLeft() {
+
+        hintBulb.setBackgroundResource(R.drawable.bulb_off);
+
+        String Q_id = jsonObj.get(index-1).getQID();
+        Iterator<String> iter = bookmarkIDs.iterator();
+        while (iter.hasNext()) {
+            String s = iter.next();
+
+            if (s.equals(Q_id))
+                bookmark.setBackgroundResource(R.drawable.star_two);
+            else
+                bookmark.setBackgroundResource(R.drawable.star);
+
+        }
 
         prevQuestion.setAlpha(0);
         nextQuestion.setAlpha(1);
@@ -314,6 +386,13 @@ import java.util.ArrayList;
 
         }
 
+    }
+
+    private void swipeUp() {
+        hintBulb.setBackgroundResource(R.drawable.bulb_on);
+
+        option[index - 1].setBackgroundResource(R.drawable.options_btn_yellow);
+        option_[index - 1].setBackgroundResource(R.drawable.abcd_btn_yellow);
     }
 
     public void updateButton(int correctOptNo, int choosenOptNo){
@@ -370,4 +449,5 @@ import java.util.ArrayList;
     public void onAnimationRepeat(Animation animation) {
 
     }
+
 }

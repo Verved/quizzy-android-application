@@ -382,7 +382,7 @@
         android:contentDescription="@string/bookmarkicon"/>
 
     <Button
-        android:id="@+id/bookmark"
+        android:id="@+id/bookmarkPg"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_marginBottom="7.5dp"
