@@ -451,7 +451,7 @@ public class registerPg extends AppCompatActivity implements View.OnClickListene
                             progressDialog.dismiss();
 
                             editor.putBoolean("isLoggedIn", true);
-                            editor.putString("username", QuizzerNameL.getText().toString());
+                            editor.putString("username", QuizzerNameR.getText().toString());
                             editor.apply();
 
                             Intent intent = new Intent(registerPg.this, homePg.class);
